@@ -15,7 +15,7 @@ type Client interface {
 	// input: The input data to be analyzed, a byte slice or remote file URL.
 	//
 	// Returns an error if the analysis fails, and an AnalyzeResponse containing the analysis results.
-	Analyze(ctx context.Context, input interface{}) (error, *AnalyzeResponse)
+	Analyze(ctx context.Context, input interface{}) (*AnalyzeResponse, error)
 	// CallEndpoint calls a Tinybird endpoint with the specified parameters.
 	//
 	// ctx: The context for the request.
@@ -27,7 +27,7 @@ type Client interface {
 	// result: A pointer to a variable where the response will be unmarshaled.
 	//
 	// Returns an error if the request fails.
-	CallEndpoint(ctx context.Context, endpoint string, params map[string]string, result interface{}) error
+	CallEndpoint(ctx context.Context, endpoint string, params map[string]string) (*EndpointResponse, error)
 	// SendEvents sends event data to the specified datasource.
 	//
 	// ctx: The context for the request.
@@ -37,7 +37,7 @@ type Client interface {
 	// data: The event data to be sent, typically in a byte slice format.
 	//
 	// options: Optional parameters for sending events, such as compression settings.
-	SendEvents(ctx context.Context, datasourceName string, data []byte, options *SendEventsOptions) error
+	SendEvents(ctx context.Context, datasourceName string, data []byte, options *SendEventsOptions) (*WriteResponse, error)
 }
 
 type SendEventsOptions struct {

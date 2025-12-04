@@ -10,7 +10,7 @@ import (
 	"github.com/klauspost/compress/zstd"
 )
 
-func (c *ClientImpl) SendEvents(ctx context.Context, datasourceName string, data []byte, options *SendEventsOptions) error {
+func (c *ClientImpl) SendEvents(ctx context.Context, datasourceName string, data []byte, options *SendEventsOptions) (*WriteResponse, error) {
 	if options == nil {
 		options = &SendEventsOptions{
 			Wait:     false,
@@ -51,21 +51,21 @@ func (c *ClientImpl) SendEvents(ctx context.Context, datasourceName string, data
 			var buf bytes.Buffer
 			gzWriter := gzip.NewWriter(&buf)
 			if _, err := gzWriter.Write(data); err != nil {
-				return fmt.Errorf("failed to compress data: %w", err)
+				return nil, fmt.Errorf("failed to compress data: %w", err)
 			}
 			if err := gzWriter.Close(); err != nil {
-				return fmt.Errorf("failed to close gzip writer: %w", err)
+				return nil, fmt.Errorf("failed to close gzip writer: %w", err)
 			}
 			body = buf.Bytes()
 		case "zstd":
 			encoder, err := zstd.NewWriter(nil)
 			if err != nil {
-				return fmt.Errorf("failed to create zstd encoder: %w", err)
+				return nil, fmt.Errorf("failed to create zstd encoder: %w", err)
 			}
 			body = encoder.EncodeAll(data, nil)
 			encoder.Close()
 		default:
-			return fmt.Errorf("unsupported compression encoding: %s", encoding)
+			return nil, fmt.Errorf("unsupported compression encoding: %s", encoding)
 		}
 		contentEncoding = encoding
 	}
@@ -78,5 +78,10 @@ func (c *ClientImpl) SendEvents(ctx context.Context, datasourceName string, data
 
 	var response WriteResponse
 
-	return c.httpClient.PostRaw(ctx, reqUrl, body, contentType, contentEncoding, &response)
+	err := c.httpClient.PostRaw(ctx, reqUrl, body, contentType, contentEncoding, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response, nil
 }

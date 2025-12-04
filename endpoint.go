@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func (c *ClientImpl) CallEndpoint(ctx context.Context, endpointName string, params map[string]string, result interface{}) error {
+func (c *ClientImpl) CallEndpoint(ctx context.Context, endpointName string, params map[string]string) (*EndpointResponse, error) {
 	reqUrl := fmt.Sprintf("%s://%s/%s/pipes/%s",
 		c.options.Protocol,
 		c.options.Host,
@@ -17,8 +17,8 @@ func (c *ClientImpl) CallEndpoint(ctx context.Context, endpointName string, para
 
 	err := c.httpClient.Get(ctx, reqUrl, params, &response)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return &response, nil
 }
