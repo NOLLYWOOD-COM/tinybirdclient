@@ -7,7 +7,7 @@ import (
 	"github.com/NOLLYWOOD-COM/tinybird/internal/httpclient"
 )
 
-const VERSION = "0.2.0"
+const VERSION = "0.3.0"
 
 // ApiVersion sets the Tinybird API version in ClientOptions.
 func ApiVersion(version string) Option {

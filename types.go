@@ -105,9 +105,9 @@ type Statistics struct {
 }
 
 type EndpointResponse struct {
-	Meta            []FieldMeta                `json:"meta"`
-	Data            []map[string][]interface{} `json:"data"`
-	Rows            int                        `json:"rows"`
-	RowsBeforeLimit int                        `json:"rows_before_limit_at_least"`
-	Stats           Statistics                 `json:"statistics"`
+	Meta            []FieldMeta              `json:"meta"`
+	Data            []map[string]interface{} `json:"data"`
+	Rows            int                      `json:"rows"`
+	RowsBeforeLimit int                      `json:"rows_before_limit_at_least"`
+	Stats           Statistics               `json:"statistics"`
 }
