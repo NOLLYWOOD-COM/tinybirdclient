@@ -21,7 +21,7 @@ func TestCallEndpoint_BasicCall(t *testing.T) {
 		mock.AnythingOfType("*tinybird.EndpointResponse"),
 	).Return(nil)
 
-	err := client.CallEndpoint(context.Background(), "my_endpoint", nil, nil)
+	_, err := client.CallEndpoint(context.Background(), "my_endpoint", nil)
 
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -48,7 +48,7 @@ func TestCallEndpoint_WithParams(t *testing.T) {
 		mock.AnythingOfType("*tinybird.EndpointResponse"),
 	).Return(nil)
 
-	err := client.CallEndpoint(context.Background(), "analytics", params, nil)
+	_, err := client.CallEndpoint(context.Background(), "analytics", params)
 
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -70,7 +70,7 @@ func TestCallEndpoint_ReturnsError(t *testing.T) {
 		mock.Anything,
 	).Return(expectedErr)
 
-	err := client.CallEndpoint(context.Background(), "failing_endpoint", nil, nil)
+	_, err := client.CallEndpoint(context.Background(), "failing_endpoint", nil)
 
 	if err == nil {
 		t.Fatal("expected error, got nil")
@@ -96,7 +96,7 @@ func TestCallEndpoint_EndpointWithSuffix(t *testing.T) {
 		mock.AnythingOfType("*tinybird.EndpointResponse"),
 	).Return(nil)
 
-	err := client.CallEndpoint(context.Background(), "my_pipe.json", nil, nil)
+	_, err := client.CallEndpoint(context.Background(), "my_pipe.json", nil)
 
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -119,7 +119,7 @@ func TestCallEndpoint_EmptyParams(t *testing.T) {
 		mock.AnythingOfType("*tinybird.EndpointResponse"),
 	).Return(nil)
 
-	err := client.CallEndpoint(context.Background(), "endpoint", emptyParams, nil)
+	_, err := client.CallEndpoint(context.Background(), "endpoint", emptyParams)
 
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -142,7 +142,7 @@ func TestCallEndpoint_ContextCancellation(t *testing.T) {
 		mock.Anything,
 	).Return(context.Canceled)
 
-	err := client.CallEndpoint(ctx, "endpoint", nil, nil)
+	_, err := client.CallEndpoint(ctx, "endpoint", nil)
 
 	if err == nil {
 		t.Fatal("expected context cancellation error, got nil")

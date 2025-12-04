@@ -38,7 +38,7 @@ func TestSendEvents_BasicSend(t *testing.T) {
 		mock.AnythingOfType("*tinybird.WriteResponse"),
 	).Return(nil)
 
-	err := client.SendEvents(context.Background(), "my_datasource", data, nil)
+	_, err := client.SendEvents(context.Background(), "my_datasource", data, nil)
 
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -63,7 +63,7 @@ func TestSendEvents_WithWaitOption(t *testing.T) {
 		mock.AnythingOfType("*tinybird.WriteResponse"),
 	).Return(nil)
 
-	err := client.SendEvents(context.Background(), "events", data, &SendEventsOptions{
+	_, err := client.SendEvents(context.Background(), "events", data, &SendEventsOptions{
 		Wait: true,
 	})
 
@@ -90,7 +90,7 @@ func TestSendEvents_WithJSONFormat(t *testing.T) {
 		mock.AnythingOfType("*tinybird.WriteResponse"),
 	).Return(nil)
 
-	err := client.SendEvents(context.Background(), "datasource", data, &SendEventsOptions{
+	_, err := client.SendEvents(context.Background(), "datasource", data, &SendEventsOptions{
 		Format: "json",
 	})
 
@@ -121,7 +121,7 @@ func TestSendEvents_WithGzipCompression(t *testing.T) {
 		mock.AnythingOfType("*tinybird.WriteResponse"),
 	).Return(nil)
 
-	err := client.SendEvents(context.Background(), "datasource", data, &SendEventsOptions{
+	_, err := client.SendEvents(context.Background(), "datasource", data, &SendEventsOptions{
 		Compress: true,
 	})
 
@@ -168,7 +168,7 @@ func TestSendEvents_WithZstdCompression(t *testing.T) {
 		mock.AnythingOfType("*tinybird.WriteResponse"),
 	).Return(nil)
 
-	err := client.SendEvents(context.Background(), "datasource", data, &SendEventsOptions{
+	_, err := client.SendEvents(context.Background(), "datasource", data, &SendEventsOptions{
 		Compress:            true,
 		CompressionEncoding: "zstd",
 	})
@@ -201,7 +201,7 @@ func TestSendEvents_UnsupportedCompression(t *testing.T) {
 	client := newTestClient(mockClient)
 
 	data := []byte(`{"name":"test"}`)
-	err := client.SendEvents(context.Background(), "datasource", data, &SendEventsOptions{
+	_, err := client.SendEvents(context.Background(), "datasource", data, &SendEventsOptions{
 		Compress:            true,
 		CompressionEncoding: "lz4",
 	})
@@ -244,7 +244,7 @@ func TestSendEvents_WithAllOptions(t *testing.T) {
 		mock.AnythingOfType("*tinybird.WriteResponse"),
 	).Return(nil)
 
-	err := client.SendEvents(context.Background(), "my_ds", data, &SendEventsOptions{
+	_, err := client.SendEvents(context.Background(), "my_ds", data, &SendEventsOptions{
 		Wait:                true,
 		Format:              "json",
 		Compress:            true,
@@ -274,7 +274,7 @@ func TestSendEvents_URLEncodesDataSourceName(t *testing.T) {
 		mock.AnythingOfType("*tinybird.WriteResponse"),
 	).Return(nil)
 
-	err := client.SendEvents(context.Background(), "my data source", data, nil)
+	_, err := client.SendEvents(context.Background(), "my data source", data, nil)
 
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -299,7 +299,7 @@ func TestSendEvents_ReturnsHTTPError(t *testing.T) {
 		mock.Anything,
 	).Return(expectedErr)
 
-	err := client.SendEvents(context.Background(), "datasource", data, nil)
+	_, err := client.SendEvents(context.Background(), "datasource", data, nil)
 
 	if err == nil {
 		t.Fatal("expected error, got nil")
